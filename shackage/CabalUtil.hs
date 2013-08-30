@@ -2,11 +2,12 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Main (main) where
+module CabalUtil where
 
+import Import
 import Control.Monad (when)
 import qualified Data.ByteString.Lazy as BL
-import Data.List
+-- import Data.List
 import Data.Aeson
 import Data.Aeson.TH
 import Distribution.ModuleName (ModuleName)
@@ -19,7 +20,7 @@ import Distribution.Version
 import Distribution.License
 import Distribution.Compiler
 import Language.Haskell.Extension
-import System.Environment (getArgs)
+-- import System.Environment (getArgs)
 
 deriveJSON id ''PackageDescription
 deriveJSON id ''PackageIdentifier
@@ -43,6 +44,9 @@ deriveJSON id ''Extension
 deriveJSON id ''KnownExtension
 deriveJSON id ''TestType
 deriveJSON id ''VersionRange
+deriveJSON id ''Benchmark
+deriveJSON id ''BenchmarkType
+deriveJSON id ''BenchmarkInterface
 
 main :: IO ()
 main = do
@@ -50,7 +54,7 @@ main = do
   when (length args == 0) $ fail "missing .cabal file"
 
   let (source:_) = args
-  gdesc <- readPackageDescription normal source
+  gdesc <- error "cabalutil" -- readPackageDescription normal source
   let desc = flattenPackageDescription gdesc
       bs = encode . toJSON $ desc
   BL.putStrLn bs
