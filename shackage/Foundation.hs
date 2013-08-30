@@ -18,6 +18,7 @@ import Settings (widgetFile, Extra (..))
 import Model
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
+import qualified Data.ByteString.Lazy as BSL
 import System.Log.FastLogger (Logger)
 
 -- | The site argument for your application. This can be a good place to
@@ -31,6 +32,7 @@ data App = App
     , httpManager :: Manager
     , persistConfig :: Settings.PersistConf
     , appLogger :: Logger
+    , hackageJson :: Value
     }
 
 -- Set up i18n messages. See the message folder.

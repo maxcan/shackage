@@ -18,10 +18,13 @@ import Network.HTTP.Conduit (newManager, def)
 import Control.Monad.Logger (runLoggingT)
 import System.IO (stdout)
 import System.Log.FastLogger (mkLogger)
-
+import Filesystem.Path.CurrentOS (fromText)
 -- Import all relevant handler modules here.
 -- Don't forget to add new modules to your cabal file!
 import Handler.Home
+
+import qualified Data.ByteString.Lazy as BSL
+import CabalUtil (readTree)
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
@@ -60,7 +63,13 @@ makeFoundation conf = do
               Database.Persist.applyEnv
     p <- Database.Persist.createPoolConfig (dbconf :: Settings.PersistConf)
     logger <- mkLogger True stdout
-    let foundation = App conf s p manager dbconf logger
+    print ("about to read in json" :: Text)
+    allData <- readTree (fromText . hackageRoot $ appExtra conf) >>= \case
+        Left t -> error $ unpack t
+        Right d -> return d
+    print ("just read json. " :: Text)
+
+    let foundation = App conf s p manager dbconf logger allData
 
     -- Perform database migration using our application's logging settings.
     runLoggingT

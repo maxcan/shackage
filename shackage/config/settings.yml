@@ -3,6 +3,8 @@ Default: &defaults
   port: 3000
   approot: "http://localhost:3000"
   copyright: Insert copyright statement here
+  hackageroot: "../test/fixtures/full-tree/"
+  # hackageroot: "../test/fixtures/short-tree/"
   #analytics: UA-YOURCODE
 
 Development:
